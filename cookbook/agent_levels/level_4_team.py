@@ -1,5 +1,4 @@
 from agno.agent import Agent
-from agno.models.anthropic import Claude
 from agno.models.openai import OpenAIChat
 from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
@@ -9,7 +8,7 @@ from agno.tools.yfinance import YFinanceTools
 web_agent = Agent(
     name="Web Search Agent",
     role="Handle web search requests and general research",
-    model=OpenAIChat(id="gpt-4.1"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
     instructions="Always include sources",
     add_datetime_to_instructions=True,
@@ -18,7 +17,7 @@ web_agent = Agent(
 finance_agent = Agent(
     name="Finance Agent",
     role="Handle financial data requests and market analysis",
-    model=OpenAIChat(id="gpt-4.1"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     tools=[
         YFinanceTools(
             stock_price=True,
@@ -38,7 +37,7 @@ finance_agent = Agent(
 reasoning_finance_team = Team(
     name="Reasoning Finance Team",
     mode="coordinate",
-    model=Claude(id="claude-sonnet-4-20250514"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     members=[web_agent, finance_agent],
     tools=[ReasoningTools(add_instructions=True)],
     instructions=[

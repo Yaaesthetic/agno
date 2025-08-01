@@ -2,7 +2,7 @@ import random
 from typing import Iterator, List  # noqa
 
 from agno.agent import Agent, RunResponse, RunResponseEvent  # noqa
-from agno.models.anthropic import Claude
+# from agno.models.anthropic import Claude
 from agno.models.openai import OpenAIChat
 from agno.team import Team
 from pydantic import BaseModel, Field
@@ -59,21 +59,21 @@ class NationalParkAdventure(BaseModel):
 
 itinerary_planner = Agent(
     name="Itinerary Planner",
-    model=Claude(id="claude-sonnet-4-20250514"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     description="You help people plan amazing national park adventures and provide detailed park guides.",
 )
 
 weather_expert = Agent(
     name="Weather Expert",
-    model=Claude(id="claude-sonnet-4-20250514"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     description="You are a weather expert and can provide detailed weather information for a given location.",
 )
 
 national_park_expert = Team(
-    model=OpenAIChat(id="gpt-4.1"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     members=[itinerary_planner, weather_expert],
     response_model=NationalParkAdventure,
-    parser_model=OpenAIChat(id="gpt-4o"),
+    parser_model=OpenAIChat(id="gpt-4o-mini"),
 )
 
 # Get the response in a variable

@@ -12,7 +12,7 @@ from agno.playground import Playground, serve_playground_app
 from agno.storage.agent.postgres import PostgresAgentStorage
 from agno.vectordb.pgvector import PgVector, SearchType
 
-db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
+db_url = "postgresql+psycopg://postgres:postgres@localhost:5432/ai_service"
 # Create a knowledge base of PDFs from URLs
 knowledge_base = PDFUrlKnowledgeBase(
     urls=["https://agno-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
@@ -28,7 +28,7 @@ knowledge_base = PDFUrlKnowledgeBase(
 rag_agent = Agent(
     name="RAG Agent",
     agent_id="rag-agent",
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     knowledge=knowledge_base,
     # Add a tool to search the knowledge base which enables agentic RAG.
     # This is enabled by default when `knowledge` is provided to the Agent.

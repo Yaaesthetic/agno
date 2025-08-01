@@ -8,8 +8,9 @@ from agno.tools.yfinance import YFinanceTools
 finance_agent = Agent(
     agent_id="finance-agent",
     name="Finance Agent",
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     tools=[YFinanceTools()],
+    debug_level=True,
 )
 
 

@@ -6,7 +6,7 @@ It provides fast and efficient reranking capabilities for RAG applications.
 ## Setup Instructions:
 
 ### 1. Install Dependencies
-Run: `pip install agno anthropic infinity-client lancedb`
+Run: `pip install agno infinity-client lancedb`
 
 ### 2. Set up Infinity Server
 You have several options to deploy Infinity:
@@ -46,17 +46,15 @@ python cookbook/agent_concepts/agentic_search/agentic_rag_infinity_reranker.py
 """
 
 from agno.agent import Agent
-from agno.embedder.cohere import CohereEmbedder
+from agno.embedder.openai import OpenAIEmbedder
 from agno.knowledge.url import UrlKnowledge
-from agno.models.anthropic import Claude
+from agno.models.openai import OpenAIChat
 from agno.reranker.infinity import InfinityReranker
 from agno.vectordb.lancedb import LanceDb, SearchType
 
 # Create a knowledge base, loaded with documents from a URL
 knowledge_base = UrlKnowledge(
     urls=[
-        "https://docs.agno.com/introduction/agents.md",
-        "https://docs.agno.com/agents/tools.md",
         "https://docs.agno.com/agents/knowledge.md",
     ],
     # Use LanceDB as the vector database, store embeddings in the `agno_docs_infinity` table
@@ -64,19 +62,19 @@ knowledge_base = UrlKnowledge(
         uri="tmp/lancedb",
         table_name="agno_docs_infinity",
         search_type=SearchType.hybrid,
-        embedder=CohereEmbedder(id="embed-v4.0"),
+        embedder=OpenAIEmbedder(id="text-embedding-3-small"),
         # Use Infinity reranker for local, fast reranking
         reranker=InfinityReranker(
             model="BAAI/bge-reranker-base",  # You can change this to other models
             host="localhost",
             port=7997,
-            top_n=5,  # Return top 5 reranked documents
+            top_n=2,  # Return top 5 reranked documents
         ),
     ),
 )
 
 agent = Agent(
-    model=Claude(id="claude-3-7-sonnet-latest"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     # Agentic RAG is enabled by default when `knowledge` is provided to the Agent.
     knowledge=knowledge_base,
     # search_knowledge=True gives the Agent the ability to search on demand
@@ -88,6 +86,7 @@ agent = Agent(
         "Provide detailed and accurate information based on the retrieved documents.",
     ],
     markdown=True,
+    debug_mode=True,
 )
 
 

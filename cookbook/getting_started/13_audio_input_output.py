@@ -43,6 +43,7 @@ agent = Agent(
 
         Focus on creating engaging and helpful voice interactions!\
     """),
+    debug_mode=True,
 )
 
 # Fetch the audio file and convert it to a base64 encoded string
@@ -52,7 +53,7 @@ response.raise_for_status()
 
 # Process the audio and get a response
 agent.run(
-    "What's in this recording? Please analyze the content and tone.",
+    "Can you identify any background noises or audio quality issues?",
     audio=[Audio(content=response.content, format="wav")],
 )
 

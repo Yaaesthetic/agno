@@ -9,7 +9,7 @@ from rich.pretty import pprint
 
 stock_searcher = Agent(
     name="Stock Searcher",
-    model=OpenAIChat("gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini"),
     role="Searches the web for information on a stock.",
     tools=[YFinanceTools()],
 )
@@ -18,7 +18,7 @@ stock_searcher = Agent(
 team = Team(
     name="Stock Research Team",
     mode="route",
-    model=OpenAIChat("gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini"),
     members=[stock_searcher],
     markdown=True,
     debug_mode=True,

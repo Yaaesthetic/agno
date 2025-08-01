@@ -9,9 +9,7 @@ Steps:
 from agno.agent import Agent
 from agno.memory.v2.db.sqlite import SqliteMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.models.google.gemini import Gemini
 from agno.models.openai import OpenAIChat
-from agno.models.perplexity.perplexity import Perplexity
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.team.team import Team
 from agno.tools.yfinance import YFinanceTools
@@ -20,7 +18,7 @@ from utils import print_chat_history, print_team_memory
 # This memory is shared by all the agents in the team
 memory_db = SqliteMemoryDb(table_name="memory", db_file="tmp/memory.db")
 
-memory = Memory(model=Gemini(id="gemini-2.0-flash-exp"), db=memory_db)
+memory = Memory(model=OpenAIChat("gpt-4o-mini"), db=memory_db)
 
 # Reset the memory for this example
 memory.clear()
@@ -28,7 +26,7 @@ memory.clear()
 
 stock_searcher = Agent(
     name="Stock Searcher",
-    model=OpenAIChat("gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini"),
     role="Searches the web for information on a stock.",
     tools=[YFinanceTools(cache_results=True)],
     storage=SqliteAgentStorage(
@@ -39,7 +37,7 @@ stock_searcher = Agent(
 
 web_searcher = Agent(
     name="Web Searcher",
-    model=Perplexity(id="sonar-pro"),
+    model=OpenAIChat("gpt-4o-mini"),
     role="Searches the web for information on a company.",
     storage=SqliteAgentStorage(
         table_name="agent_sessions", db_file="tmp/persistent_memory.db"
@@ -50,7 +48,7 @@ web_searcher = Agent(
 team = Team(
     name="Stock Team",
     mode="coordinate",
-    model=OpenAIChat("gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini"),
     # Store team sessions in a database
     storage=SqliteAgentStorage(
         table_name="team_sessions", db_file="tmp/persistent_memory.db"
@@ -115,3 +113,5 @@ session_run = memory.runs[session_id][-1]
 print_chat_history(session_run)
 # -*- Print team memory (you can also get the user memories from the team)
 print_team_memory(user_id, team.get_user_memories(user_id))
+
+

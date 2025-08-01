@@ -11,25 +11,19 @@ import asyncio
 from agno.agent import Agent
 from agno.memory.v2.db.sqlite import SqliteMemoryDb
 from agno.memory.v2.memory import Memory
-from agno.models.anthropic.claude import Claude
-from agno.models.google.gemini import Gemini
-from agno.models.mistral.mistral import MistralChat
 from agno.models.openai import OpenAIChat
 from agno.storage.agent.sqlite import SqliteAgentStorage
 from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
-from utils import print_team_memory
+from utils import print_team_memory, print_chat_history
 
 memory_db = SqliteMemoryDb(table_name="memory", db_file="tmp/memory.db")
 
-memory = Memory(model=Gemini(id="gemini-2.0-flash-exp"), db=memory_db)
-
-# Reset the memory for this example
-memory.clear()
+memory = Memory(model=OpenAIChat("gpt-4o-mini"), db=memory_db)
 
 web_searcher = Agent(
     name="Web Searcher",
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini", temperature=0),
     role="Searches the web for information.",
     tools=[DuckDuckGoTools(cache_results=True)],
     storage=SqliteAgentStorage(
@@ -41,7 +35,7 @@ web_searcher = Agent(
 chat_team = Team(
     name="Chat Team",
     mode="coordinate",
-    model=OpenAIChat("gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini"),
     storage=SqliteAgentStorage(
         table_name="team_sessions", db_file="tmp/persistent_memory.db"
     ),
@@ -52,24 +46,26 @@ chat_team = Team(
     show_tool_calls=True,
     markdown=True,
     show_members_responses=True,
+    enable_team_history=True,
+        num_of_interactions_from_history=5,
 )
 
 
 french_agent = Agent(
     name="French Agent",
     role="You can only answer in French",
-    model=MistralChat(id="mistral-large-latest"),
+    model=OpenAIChat("gpt-4o-mini"),
 )
 german_agent = Agent(
     name="German Agent",
     role="You can only answer in German",
-    model=Claude("claude-3-5-sonnet-20241022"),
+    model=OpenAIChat("gpt-4o-mini"),
 )
 
 multi_language_team = Team(
     name="Multi Language Team",
     mode="route",
-    model=OpenAIChat("gpt-4o"),
+    model=OpenAIChat("gpt-4o-mini"),
     members=[
         french_agent,
         german_agent,
@@ -86,6 +82,10 @@ multi_language_team = Team(
     memory=memory,
     enable_user_memories=True,
     show_members_responses=True,
+    enable_team_history=True,
+        num_of_interactions_from_history=5,
+
+
 )
 
 
@@ -116,3 +116,7 @@ if __name__ == "__main__":
 
     # -*- Print team memory
     print_team_memory(user_id, memory.get_user_memories(user_id))
+    print('-'*20)
+    print_chat_history(memory.runs[multi_language_session_id][-1])
+    print('-'*20)
+    print_chat_history(memory.runs[chat_session_id][-1])

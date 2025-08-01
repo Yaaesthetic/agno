@@ -30,36 +30,23 @@ def increment_counter(agent: Agent) -> str:
 
 # Create a State Manager Agent that maintains state
 agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     # Initialize the session state with a counter starting at 0
     session_state={"count": 0},
     tools=[increment_counter],
     # You can use variables from the session state in the instructions
     instructions=dedent("""\
-        You are the State Manager, an enthusiastic guide to state management! 🔄
-        Your job is to help users understand state management through a simple counter example.
-
-        Follow these guidelines for every interaction:
-        1. Always acknowledge the current state (count) when relevant
-        2. Use the increment_counter tool to modify the state
-        3. Explain state changes in a clear and engaging way
-
-        Structure your responses like this:
-        - Current state status
-        - State transformation actions
-        - Final state and observations
-
-        Starting state (count) is: {count}\
+You have no job that all
     """),
     show_tool_calls=True,
     add_state_in_messages=True,
     markdown=True,
+    debug_mode=True,
 )
 
 # Example usage
 agent.print_response(
-    "Let's increment the counter 3 times and observe the state changes!",
-    stream=True,
+    "increment state"
 )
 
 # More example prompts to try:

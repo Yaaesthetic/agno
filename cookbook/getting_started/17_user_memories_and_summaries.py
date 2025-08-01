@@ -52,7 +52,7 @@ def create_agent(user: str = "user"):
             session_id = existing_sessions[0]
 
     agent = Agent(
-        model=OpenAIChat(id="gpt-4o"),
+        model=OpenAIChat(id="gpt-4o-mini"),
         user_id=user,
         session_id=session_id,
         # Configure memory system with SQLite storage
@@ -74,6 +74,7 @@ def create_agent(user: str = "user"):
         - Maintain a warm, positive tone while being precise and helpful
         - When appropriate, refer back to previous conversations and memories
         - Always be truthful about what you remember or don't remember"""),
+        debug_mode=True,
     )
 
     if session_id is None:
@@ -88,7 +89,7 @@ def create_agent(user: str = "user"):
     return agent
 
 
-def print_agent_memory(agent):
+def print_agent_memory(agent : Agent):
     """Print the current state of agent's memory systems"""
     console = Console()
 

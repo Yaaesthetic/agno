@@ -21,8 +21,8 @@ from agno.tools.dalle import DalleTools
 
 # Create an Creative AI Artist Agent
 image_agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
-    tools=[DalleTools()],
+    model=OpenAIChat(id="gpt-4o-mini"),
+    tools=[DalleTools(model="dall-e-3" ,size="1024x1024")],
     description=dedent("""\
         You are an experienced AI artist with expertise in various artistic styles,
         from photorealism to abstract art. You have a deep understanding of composition,
@@ -40,11 +40,12 @@ image_agent = Agent(
     """),
     markdown=True,
     show_tool_calls=True,
+    debug_mode=True,
 )
 
 # Example usage
 image_agent.print_response(
-    "Create a magical library with floating books and glowing crystals", stream=True
+    "A beautiful 18-year-old girl from Fes, Morocco, with a well-formed, attractive body. She is dressed elegantly with traditional Moroccan elements that highlight her beauty and cultural background. The style is photorealistic, with a serene and confident expression, set against a softly lit background inspired by the historic architecture of Fes", stream=True
 )
 
 # Retrieve and display generated images

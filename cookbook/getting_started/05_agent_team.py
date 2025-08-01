@@ -20,7 +20,7 @@ from agno.tools.yfinance import YFinanceTools
 web_agent = Agent(
     name="Web Agent",
     role="Search the web for information",
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
     instructions=dedent("""\
         You are an experienced web researcher and news analyst! 🔍
@@ -42,13 +42,15 @@ web_agent = Agent(
         - Pay special attention to regulatory news, earnings reports, and strategic announcements\
     """),
     show_tool_calls=True,
+    debug_level=1,
+    debug_mode=True,
     markdown=True,
 )
 
 finance_agent = Agent(
     name="Finance Agent",
     role="Get financial data",
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     tools=[
         YFinanceTools(stock_price=True, analyst_recommendations=True, company_info=True)
     ],
@@ -77,8 +79,8 @@ finance_agent = Agent(
 
 agent_team = Team(
     members=[web_agent, finance_agent],
-    model=OpenAIChat(id="gpt-4o"),
-    mode="coordinate",
+    model=OpenAIChat(id="gpt-4o-mini"),
+    mode="route",
     success_criteria=dedent("""\
         A comprehensive financial news report with clear sections and data-driven insights.
     """),
@@ -107,22 +109,22 @@ agent_team = Team(
     show_tool_calls=True,
     markdown=True,
     enable_agentic_context=True,
-    show_members_responses=False,
+    show_members_responses=True,
 )
 
 # Example usage with diverse queries
-agent_team.print_response(
-    message="Summarize analyst recommendations and share the latest news for NVDA",
-    stream=True,
-)
+# agent_team.print_response(
+#     message="Summarize analyst recommendations and share the latest news for NVDA",
+#     stream=True,
+# )
 agent_team.print_response(
     message="What's the market outlook and financial performance of AI semiconductor companies?",
     stream=True,
 )
-agent_team.print_response(
-    message="Analyze recent developments and financial performance of TSLA",
-    stream=True,
-)
+# agent_team.print_response(
+#     message="Analyze recent developments and financial performance of TSLA",
+#     stream=True,
+# )
 
 # More example prompts to try:
 """

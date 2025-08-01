@@ -15,6 +15,23 @@ from agno.agent import Agent, RunResponse  # noqa
 from agno.models.openai import OpenAIChat
 from pydantic import BaseModel, Field
 
+from enum import Enum
+
+class Genre(str, Enum):
+    """Enumeration for film genres."""
+    ACTION = "Action"
+    ADVENTURE = "Adventure"
+    COMEDY = "Comedy"
+    DRAMA = "Drama"
+    FANTASY = "Fantasy"
+    HORROR = "Horror"
+    MYSTERY = "Mystery"
+    ROMANCE = "Romance"
+    SCI_FI = "Sci-Fi"
+    THRILLER = "Thriller"
+    WESTERN = "Western"
+    ROMANTIC_COMEDY = "Romantic Comedy"
+    SCI_FI_THRILLER = "Sci-Fi Thriller"
 
 class MovieScript(BaseModel):
     setting: str = Field(
@@ -25,9 +42,10 @@ class MovieScript(BaseModel):
         ...,
         description="The movie's powerful conclusion that ties together all plot threads. Should deliver emotional impact and satisfaction.",
     )
-    genre: str = Field(
+    genres: List[Genre] = Field(
         ...,
-        description="The film's primary and secondary genres (e.g., 'Sci-fi Thriller', 'Romantic Comedy'). Should align with setting and tone.",
+        min_length=1,
+        description="A list of genres for the film (genre supported: [Genre.ACTION, Genre.ADVENTURE, Genre.COMEDY, Genre.DRAMA, Genre.FANTASY, Genre.HORROR, Genre.MYSTERY, Genre.ROMANCE, Genre.SCI_FI, Genre.THRILLER, Genre.WESTERN, Genre.ROMANTIC_COMEDY, Genre.SCI_FI_THRILLER])."
     )
     name: str = Field(
         ...,
@@ -45,7 +63,7 @@ class MovieScript(BaseModel):
 
 # Agent that uses JSON mode
 json_mode_agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     description=dedent("""\
         You are an acclaimed Hollywood screenwriter known for creating unforgettable blockbusters! 🎬
         With the combined storytelling prowess of Christopher Nolan, Aaron Sorkin, and Quentin Tarantino,
@@ -80,11 +98,13 @@ json_mode_agent = Agent(
     """),
     response_model=MovieScript,
     use_json_mode=True,
+    debug_level=1,
+    debug_mode=True,
 )
 
 # Agent that uses structured outputs
 structured_output_agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     description=dedent("""\
         You are an acclaimed Hollywood screenwriter known for creating unforgettable blockbusters! 🎬
         With the combined storytelling prowess of Christopher Nolan, Aaron Sorkin, and Quentin Tarantino,
@@ -118,11 +138,13 @@ structured_output_agent = Agent(
         Transform every location into an unforgettable cinematic experience!\
     """),
     response_model=MovieScript,
+    debug_level=1,
+    debug_mode=True,
 )
 
 # Example usage with different locations
 json_mode_agent.print_response("Tokyo", stream=True)
-structured_output_agent.print_response("Ancient Rome", stream=True)
+structured_output_agent.print_response("Tokyo", stream=True)
 
 # More examples to try:
 """
@@ -135,7 +157,7 @@ Creative location prompts to explore:
 """
 
 # To get the response in a variable:
-# from rich.pretty import pprint
+from rich.pretty import pprint
 
 # json_mode_response: RunResponse = json_mode_agent.run("New York")
 # pprint(json_mode_response.content)

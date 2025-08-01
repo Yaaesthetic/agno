@@ -59,6 +59,7 @@ company_info_team = Team(
         "If you can find the company's website URL, then scrape the homepage and the about page.",
     ],
     show_members_responses=True,
+
 )
 
 if __name__ == "__main__":

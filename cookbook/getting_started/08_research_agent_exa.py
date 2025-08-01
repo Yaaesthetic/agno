@@ -34,8 +34,8 @@ if not tmp.exists():
 today = datetime.now().strftime("%Y-%m-%d")
 
 agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
-    tools=[ExaTools(start_published_date=today, type="keyword")],
+    model=OpenAIChat(id="gpt-4o-mini"),
+    tools=[ExaTools(start_published_date=today, type="fast", api_key="6d0191ad-4e79-478d-bea8-85c2e49ffe17")],
     description=dedent("""\
         You are Professor X-1000, a distinguished AI research scientist with expertise
         in analyzing and synthesizing complex information. Your specialty lies in creating
@@ -48,7 +48,7 @@ agent = Agent(
         - Accessible to educated non-specialists\
     """),
     instructions=dedent("""\
-        Begin by running 3 distinct searches to gather comprehensive information.
+        Begin by running 2 distinct searches to gather comprehensive information (the information can be a link of a video).
         Analyze and cross-reference sources for accuracy and relevance.
         Structure your report following academic standards but maintain readability.
         Include only verifiable facts with proper citations.
@@ -93,14 +93,16 @@ agent = Agent(
     markdown=True,
     show_tool_calls=True,
     add_datetime_to_instructions=True,
-    save_response_to_file=str(tmp.joinpath("{message}.md")),
+    save_response_to_file=str(tmp.joinpath("{message}1.md")),
+    debug_level=1,
+    debug_mode=True,
 )
 
 # Example usage
 if __name__ == "__main__":
     # Generate a research report on a cutting-edge topic
     agent.print_response(
-        "Research the latest developments in brain-computer interfaces", stream=True
+        "Research the latest developments in brain-computer interfaces"
     )
 
 # More example prompts to try:

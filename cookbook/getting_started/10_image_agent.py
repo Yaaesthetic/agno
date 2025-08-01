@@ -26,7 +26,7 @@ from agno.models.openai import OpenAIChat
 from agno.tools.duckduckgo import DuckDuckGoTools
 
 agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     description=dedent("""\
         You are a world-class visual journalist and cultural correspondent with a gift
         for bringing images to life through storytelling! 📸✨ With the observational skills
@@ -62,9 +62,10 @@ agent = Agent(
 
         Transform every image into a compelling news story that informs and inspires!\
     """),
-    tools=[DuckDuckGoTools()],
+    tools=[DuckDuckGoTools(fixed_max_results=1)],
     show_tool_calls=True,
     markdown=True,
+    debug_mode=True,
 )
 
 # Example usage with a famous landmark
@@ -72,7 +73,7 @@ agent.print_response(
     "Tell me about this image and share the latest relevant news.",
     images=[
         Image(
-            url="https://upload.wikimedia.org/wikipedia/commons/0/0c/GoldenGateBridge-001.jpg"
+            url="https://upload.wikimedia.org/wikipedia/commons/b/bd/Taj_Mahal%2C_Agra%2C_India_edit3.jpg"
         )
     ],
     stream=True,

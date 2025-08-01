@@ -47,7 +47,7 @@ def answer_from_known_questions(agent: Team, question: str) -> str:
 web_agent = Agent(
     name="Web Agent",
     role="Search the web for information",
-    tools=[DuckDuckGoTools()],
+    tools=[DuckDuckGoTools(fixed_max_results=1)],
     markdown=True,
 )
 

@@ -18,7 +18,7 @@ from agno.vectordb.lancedb import LanceDb, SearchType
 
 # Create a Recipe Expert Agent with knowledge of Thai recipes
 agent = Agent(
-    model=OpenAIChat(id="gpt-4o"),
+    model=OpenAIChat(id="gpt-4o-mini"),
     instructions=dedent("""\
         You are a passionate and knowledgeable Thai cuisine expert! 🧑‍🍳
         Think of yourself as a combination of a warm, encouraging cooking instructor,
@@ -75,6 +75,8 @@ agent = Agent(
     tools=[DuckDuckGoTools()],
     show_tool_calls=True,
     markdown=True,
+    debug_level=1,
+    debug_mode=True
 )
 
 # Comment out after the knowledge base is loaded
